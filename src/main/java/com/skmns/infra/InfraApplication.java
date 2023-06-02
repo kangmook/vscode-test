@@ -10,3 +10,4 @@ public class InfraApplication {
 		SpringApplication.run(InfraApplication.class, args);
 	}
 }
+ 

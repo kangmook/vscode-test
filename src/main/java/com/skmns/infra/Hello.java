@@ -1,5 +1,7 @@
 package com.skmns.infra;
 
+import java.util.HashMap;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,4 +20,12 @@ public class Hello {
         String rtnVal = String.format("Hello %s", name); 
         return rtnVal;
     }
+
+    @GetMapping("/helloTest")
+    public HashMap<String, Object> testPage() {
+        HashMap<String, Object> rtnParam = new HashMap<String, Object>();
+        return rtnParam; 
+    }
+
+
 }
