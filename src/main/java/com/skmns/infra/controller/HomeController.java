@@ -1,14 +1,23 @@
 package com.skmns.infra.controller;
 
+import java.util.HashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.skmns.infra.service.AuthService;
 
 @Controller
 public class HomeController {
     
+	@Autowired
+	private AuthService authService;
+
     @RequestMapping("/")
 	public String hello() {
-		System.out.println("====== Home.jsp 호출 =======");
+		HashMap<String, Object> rtnMap = new HashMap<String, Object>();
+		rtnMap.put("authList", authService.selectAuthList());
 		return "home";
 	}
 }

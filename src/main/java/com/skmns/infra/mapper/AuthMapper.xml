@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.skmns.infra.auth">
+    <select id="selectAuthList" resultType="com.skmns.infra.vo.AuthVO" >
+        SELECT 
+                T1.EMP_ID
+            ,   T1.EMP_NAME
+            ,   T1.EMP_AGE
+            ,   T1.EMP_TEL
+            ,   T1.EMP_JSON
+        FROM TL_AUTH T1
+    </select>
+</mapper>
