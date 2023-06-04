@@ -8,6 +8,7 @@ public class HomeController {
     
     @RequestMapping("/")
 	public String hello() {
+		System.out.println("====== Home.jsp 호출 =======");
 		return "home";
 	}
 }
