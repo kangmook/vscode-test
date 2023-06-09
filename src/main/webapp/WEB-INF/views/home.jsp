@@ -95,7 +95,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Email</th>
+                        <th>age</th>
                         <th>tel</th>
                     </tr>
                 </thead>
@@ -173,7 +173,7 @@
                 "<tr>" +
                     "<td>" + row.empId + "</td>" +
                     "<td>" + row.empName + "</td>" +
-                    "<td>" + row.empAge + "</td>" +
+                    "<td>" + row.empAge + " 세</td>" +
                     "<td>" + row.empTel + "</td>" +
                 "</tr>";
 
