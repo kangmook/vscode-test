@@ -134,7 +134,7 @@
         var jsonData = []; // 전체 데이터
         var tableBody = $("#dataTable tbody");
         var currentPage = 1;
-        var pageSize = 3;
+        var pageSize = 10;
 
         function fetchData() {
             console.log('==== fetch start ====');
