@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -85,6 +87,20 @@
                     Sungmook API
                 </a>
             </div>
+
+            <button id="refreshButton">Refresh Data</button>
+            <br />
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>tel</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </section>
     
@@ -98,6 +114,56 @@
     <!-- Core theme JS-->
     <script src="static/js/scripts.js"></script>
     <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    
+    <script>
+        var refreshButton = document.getElementById("refreshButton");
+        refreshButton.addEventListener("click", function() {
+            fetchData();
+        });
+
+        function fetchData() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var jsonData = JSON.parse(xhr.responseText);
+                        updateTable(jsonData);
+                    } else {
+                        console.error("Error occurred while fetching JSON data.");
+                    }
+                }
+            };
+
+            xhr.open("GET", "/api/getAuthListApi.json", true);
+            xhr.send();
+        }
+
+        function updateTable(jsonData) {
+            var tableBody = document.getElementById("dataTable").getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = ""; // 기존 테이블 내용 초기화
+
+            for (var i = 0; i < jsonData.length; i++) {
+                var row = jsonData[i];
+                var rowData = "<tr>" +
+                    "<td>" + row.empId + "</td>" +
+                "<td>" + row.empName + "</td>" +
+                "<td>" + row.empAge + "</td>" +
+                "<td>" + row.empTel + "</td>" +
+                    "</tr>";
+
+                tableBody.innerHTML += rowData;
+            }
+        }
+
+        // 초기 데이터 로드
+        fetchData();
+
+        // 주기적으로 데이터 갱신 (5초마다)
+        setInterval(function() {
+            fetchData();
+        }, 5000); // 5000ms = 5 seconds
+    </script>
+
 </body>
 
 </html>
