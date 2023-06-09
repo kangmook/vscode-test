@@ -101,6 +101,13 @@
                 </thead>
                 <tbody></tbody>
             </table>
+            <br />
+            <div id="paginationContainer">
+                <button id="prevButton">Previous</button>
+                <span id="currentPage"></span>
+                <button id="nextButton">Next</button>
+            </div>
+
         </div>
     </section>
     
@@ -114,47 +121,84 @@
     <!-- Core theme JS-->
     <script src="static/js/scripts.js"></script>
     <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <script>
-        var refreshButton = document.getElementById("refreshButton");
-        refreshButton.addEventListener("click", function() {
-            fetchData();
+        // 버튼 클릭 이벤트
+        $("#refreshButton").on("click", function() {
+            if ( confirm('새로고침 하시겠습니까?')) {
+                fetchData();
+            }
         });
 
-        function fetchData() {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        var jsonData = JSON.parse(xhr.responseText);
-                        updateTable(jsonData);
-                    } else {
-                        console.error("Error occurred while fetching JSON data.");
-                    }
-                }
-            };
+        var jsonData = []; // 전체 데이터
+        var tableBody = $("#dataTable tbody");
+        var currentPage = 1;
+        var pageSize = 3;
 
-            xhr.open("GET", "/api/getAuthListApi.json", true);
-            xhr.send();
+        function fetchData() {
+            console.log('==== fetch start ====');
+            var startIndex = (currentPage - 1) * pageSize;
+            var endIndex = startIndex + pageSize;
+
+            $.ajax({
+                url: "/api/getAuthListApi.json",
+                method: "GET",
+                dataType: "json",
+                success: function(data) {
+                    //var pagedData = jsonData.slice(startIndex, endIndex);
+                    jsonData = data;
+                    updateTable();
+                    updatePagination();
+
+
+                },
+                error: function() {
+                    console.error("Error occurred while fetching JSON data.");
+                }
+            });
+            console.log('==== fetch end ====');
         }
 
-        function updateTable(jsonData) {
-            var tableBody = document.getElementById("dataTable").getElementsByTagName("tbody")[0];
-            tableBody.innerHTML = ""; // 기존 테이블 내용 초기화
+        function updateTable() {
+            var startIndex = (currentPage - 1) * pageSize;
+            var endIndex = startIndex + pageSize;
+            var tableBody = $("#dataTable tbody");
 
-            for (var i = 0; i < jsonData.length; i++) {
+            tableBody.empty(); // 기존 테이블 내용 초기화
+
+            for (var i = startIndex; i < endIndex && i < jsonData.length; i++) {
                 var row = jsonData[i];
-                var rowData = "<tr>" +
+                var rowData = 
+                "<tr>" +
                     "<td>" + row.empId + "</td>" +
-                "<td>" + row.empName + "</td>" +
-                "<td>" + row.empAge + "</td>" +
-                "<td>" + row.empTel + "</td>" +
-                    "</tr>";
+                    "<td>" + row.empName + "</td>" +
+                    "<td>" + row.empAge + "</td>" +
+                    "<td>" + row.empTel + "</td>" +
+                "</tr>";
 
-                tableBody.innerHTML += rowData;
+                tableBody.append(rowData);
             }
         }
 
+        function updatePagination() {
+            var totalPages = Math.ceil(jsonData.length / pageSize);
+            $("#currentPage").text("Page " + currentPage + " of " + totalPages);
+
+            if (currentPage === 1) {
+                $("#prevButton").prop("disabled", true);
+            } else {
+                $("#prevButton").prop("disabled", false);
+            }
+
+            if (currentPage === totalPages) {
+                $("#nextButton").prop("disabled", true);
+            } else {
+                $("#nextButton").prop("disabled", false);
+            }
+        }
+
+        
         // 초기 데이터 로드
         fetchData();
 
@@ -162,6 +206,26 @@
         setInterval(function() {
             fetchData();
         }, 5000); // 5000ms = 5 seconds
+
+        // 이전 페이지로 이동
+        $("#prevButton").on("click", function() {
+            if (currentPage > 1) {
+                currentPage--;
+                updateTable();
+                updatePagination();
+            }
+        });
+
+        // 다음 페이지로 이동
+        $("#nextButton").on("click", function() {
+            var totalPages = Math.ceil(jsonData.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                updateTable();
+                updatePagination();
+            }
+        });
+
     </script>
 
 </body>
