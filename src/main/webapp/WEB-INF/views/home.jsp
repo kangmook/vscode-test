@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="static/css/styles.css" rel="stylesheet" />
+
 </head>
 
 <body id="page-top">
@@ -33,7 +34,7 @@
                 <ul class="navbar-nav ms-auto">
                     <!-- <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#portfolio">Portfolio</a></li> -->
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about">About</a></li>
-                    <!-- <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact">Contact</a></li> -->
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#board">Board</a></li>
                 </ul>
             </div>
         </div>
@@ -87,30 +88,49 @@
                     Sungmook API
                 </a>
             </div>
-
-            <button id="refreshButton">Refresh Data</button>
-            <br />
-            <table id="dataTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>age</th>
-                        <th>tel</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <br />
-            <div id="paginationContainer">
-                <button id="prevButton">Previous</button>
-                <span id="currentPage"></span>
-                <button id="nextButton">Next</button>
-            </div>
-
         </div>
     </section>
-    
+
+    <!-- Board -->
+    <section class="page-section bg-primary text-white mb-0" id="board">
+        <div class="container">
+            <!-- Contact Section Heading-->
+            <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Test Board</h2>
+            <!-- Icon Divider-->
+            <div class="divider-custom">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-7">
+                    
+                    <button type="button" class="btn btn-danger" id="refreshButton">Refresh Data</button>
+                    <br />
+                    <table class="table" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>age</th>
+                                <th>tel</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    
+                    <div id="paginationContainer" align="center">
+                        <button type="button" class="btn btn-outline-success" id="prevButton">Previous</button>
+                        <span id="currentPage"></span>
+                        <button type="button" class="btn btn-outline-success" id="nextButton">Next</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Copyright Section-->
     <div class="copyright py-4 text-center text-white">
         <div class="container"><small>Copyright &copy; kang sungmook 2023</small></div>
@@ -122,7 +142,7 @@
     <script src="static/js/scripts.js"></script>
     <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+        
     <script>
         // 버튼 클릭 이벤트
         $("#refreshButton").on("click", function() {
@@ -134,10 +154,9 @@
         var jsonData = []; // 전체 데이터
         var tableBody = $("#dataTable tbody");
         var currentPage = 1;
-        var pageSize = 10;
+        var pageSize = 6;
 
         function fetchData() {
-            console.log('==== fetch start ====');
             var startIndex = (currentPage - 1) * pageSize;
             var endIndex = startIndex + pageSize;
 
@@ -146,18 +165,14 @@
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
-                    //var pagedData = jsonData.slice(startIndex, endIndex);
                     jsonData = data;
                     updateTable();
                     updatePagination();
-
-
                 },
                 error: function() {
                     console.error("Error occurred while fetching JSON data.");
                 }
             });
-            console.log('==== fetch end ====');
         }
 
         function updateTable() {
@@ -183,7 +198,14 @@
 
         function updatePagination() {
             var totalPages = Math.ceil(jsonData.length / pageSize);
-            $("#currentPage").text("Page " + currentPage + " of " + totalPages);
+            $("#currentPage").text(currentPage + " / " + totalPages); // 현재 페이지 / 전체 페이지 수 표시
+
+            var pageNumbers = "";
+            for (var i = 1; i <= totalPages; i++) {
+                pageNumbers += '<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>';
+            }
+
+            $("#pageNumbers").html(pageNumbers);
 
             if (currentPage === 1) {
                 $("#prevButton").prop("disabled", true);
@@ -197,6 +219,14 @@
                 $("#nextButton").prop("disabled", false);
             }
         }
+
+        // 페이지 번호 클릭 이벤트 처리
+        $("#pageNumbers").on("click", ".page-link", function() {
+            var pageNumber = parseInt($(this).text());
+            currentPage = pageNumber;
+            updatePagination();
+            // 페이지 번호에 따른 데이터 로딩 등의 동작 수행
+        });
 
         
         // 초기 데이터 로드
