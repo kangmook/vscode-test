@@ -121,9 +121,11 @@
                     </table>
                     
                     <div id="paginationContainer" align="center">
-                        <button type="button" class="btn btn-outline-success" id="prevButton">Previous</button>
+                        <button type="button" class="btn btn-outline-success btn-sm" id="prevButton">이전</button>
+                        &nbsp;
                         <span id="currentPage"></span>
-                        <button type="button" class="btn btn-outline-success" id="nextButton">Next</button>
+                        &nbsp;
+                        <button type="button" class="btn btn-outline-success btn-sm" id="nextButton">다음</button>
                     </div>
 
                 </div>
@@ -151,10 +153,10 @@
             }
         });
 
-        var jsonData = []; // 전체 데이터
+        var jsonData = []; // 전체 데이터, fetchData 내 api 통신하여 전체 데이터를 json 방식으로 가져온다.
         var tableBody = $("#dataTable tbody");
         var currentPage = 1;
-        var pageSize = 6;
+        var pageSize = 10; // 페이지 노출 갯수
 
         function fetchData() {
             var startIndex = (currentPage - 1) * pageSize;
@@ -173,6 +175,9 @@
                     console.error("Error occurred while fetching JSON data.");
                 }
             });
+
+            console.log("== fetch data 5sec done ==");
+
         }
 
         function updateTable() {
@@ -200,13 +205,6 @@
             var totalPages = Math.ceil(jsonData.length / pageSize);
             $("#currentPage").text(currentPage + " / " + totalPages); // 현재 페이지 / 전체 페이지 수 표시
 
-            var pageNumbers = "";
-            for (var i = 1; i <= totalPages; i++) {
-                pageNumbers += '<li class="page-item"><a class="page-link" href="#">' + i + '</a></li>';
-            }
-
-            $("#pageNumbers").html(pageNumbers);
-
             if (currentPage === 1) {
                 $("#prevButton").prop("disabled", true);
             } else {
@@ -219,15 +217,6 @@
                 $("#nextButton").prop("disabled", false);
             }
         }
-
-        // 페이지 번호 클릭 이벤트 처리
-        $("#pageNumbers").on("click", ".page-link", function() {
-            var pageNumber = parseInt($(this).text());
-            currentPage = pageNumber;
-            updatePagination();
-            // 페이지 번호에 따른 데이터 로딩 등의 동작 수행
-        });
-
         
         // 초기 데이터 로드
         fetchData();
