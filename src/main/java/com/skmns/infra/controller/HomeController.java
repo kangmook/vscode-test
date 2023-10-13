@@ -24,11 +24,6 @@ public class HomeController {
 
     @RequestMapping("/")
 	public String hello(Model model) throws InterruptedException, ExecutionException, JsonProcessingException {
-		// HashMap<String, Object> rtnMap = new HashMap<String, Object>();
-		// rtnMap.put("authList", authService.selectAuthList());
-		// rtnMap.put("asyncAuthList", authService.selectAuthList1().get());
-		// System.out.println("asyncAuthList >>> " + rtnMap.get("asyncAuthList"));
-		//odel.addAttribute("authList", authService.selectAuthList());
 		ObjectMapper mapper = new ObjectMapper();
 		String asyncAuthList = mapper.writeValueAsString(authService.selectAuthList1().get());
 		model.addAttribute("asyncAuthList", asyncAuthList);
