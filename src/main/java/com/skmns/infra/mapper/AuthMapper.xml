@@ -4,12 +4,12 @@
 
 <mapper namespace="com.skmns.infra.auth">
     <select id="selectAuthList" resultType="com.skmns.infra.vo.AuthVO" >
-        SELECT 
-                T1.EMP_ID
-            ,   T1.EMP_NAME
-            ,   T1.EMP_AGE
-            ,   T1.EMP_TEL
-            ,   T1.EMP_JSON
-        FROM TL_AUTH T1
+        select 
+                t1.emp_id
+            ,   t1.emp_name
+            ,   t1.emp_age
+            ,   t1.emp_tel
+            ,   t1.emp_json
+        from tl_auth t1
     </select>
 </mapper> 
